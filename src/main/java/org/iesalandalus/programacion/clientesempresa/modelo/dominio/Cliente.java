@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.clientesempresa.modelo.negocio.dominio;
+package org.iesalandalus.programacion.clientesempresa.modelo.dominio;
 
 import java.time.LocalDate;
 import java.util.Objects;
