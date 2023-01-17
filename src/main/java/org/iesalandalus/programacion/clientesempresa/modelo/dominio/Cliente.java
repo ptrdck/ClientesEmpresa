@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class Cliente 
 {
+	// Creación de atributos de clase 
 	private static final String ER_CORREO = "\\w+(?:\\.\\w+)*@\\w+\\.\\w{2,5}";
 	private static final String ER_DNI = "([0-9]{8})([A-Za-z])";
 	private static final String ER_TELEFONO = "[679][0-9]{8}";
@@ -47,7 +48,12 @@ public class Cliente
 	
 	private boolean comprobarLetraDni (String dni)
 	{
-		char[] LETRAS_DNI = {'T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'};
+		//inicialización de variables locales
+		
+		//letras validas para el DNI según su posición se evalua su validez. 
+		char[] LETRAS_DNI = {'T','R','W','A','G','M','Y','F',
+							'P','D','X','B','N','J','Z','S',
+							'Q','V','H','L','C','K','E'};
 		
 		int dniNumero;
 		char dniLetra;
@@ -64,7 +70,7 @@ public class Cliente
 		
 	}
 
-	
+	// Dos clientes son iguales si poseen el mismo DNI. 
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -82,9 +88,10 @@ public class Cliente
 	{
 		
 		String formateaNombre = "";
-		
+		// Creación de objeto del método StringTokenizer
 		StringTokenizer st = new StringTokenizer(nombre);
 		
+		// contador de palabras que tiene la variable que contiene el texto. Se guarda en un entero
 		int palabras = st.countTokens();
 		
 		for (int i = 0; i < palabras ; i++ )
@@ -99,7 +106,7 @@ public class Cliente
 		
 	}
 	
-	
+	// Getters
 	public String getCorreo() {
 		return correo;
 	}
@@ -116,10 +123,13 @@ public class Cliente
 		
 		String iniciales = "";
 		
+		//inicialización de objeto del método StringTokenizer
 		StringTokenizer stIniciales = new StringTokenizer(nombre);
 		
+		//Ciclo que evaluará las palabras de nbombre y extraerá la inicial de cada una.
 		while (stIniciales.hasMoreTokens()) {
 			String inicial = stIniciales.nextToken();
+			//se extrae la inicial de cada palabra evaluada.
 			iniciales += inicial.substring(0,1); 
 		}
 		
@@ -135,11 +145,13 @@ public class Cliente
 	}
 	
 
+	// Dos clientes son iguales si poseen el mismo DNI. 
 	@Override
 	public int hashCode() {
 		return Objects.hash(dni);
 	}
 	
+	//Setters
 	public void setCorreo(String correo) 
 	{
 		Pattern patron = Pattern.compile(ER_CORREO);
@@ -163,7 +175,10 @@ public class Cliente
 
 	private void setDni(String dni) 
 	{
+		// Pattern crea el patrón que se debe cumplir.
 		Pattern patron = Pattern.compile(ER_DNI);
+		
+		// Matcher evalúa si el String cumple con el formato indicado en Pattern
 		Matcher mPatron = patron.matcher(dni);
 		
 		if (dni == null)
@@ -171,10 +186,12 @@ public class Cliente
 			throw new NullPointerException("ERROR: El dni de un cliente no puede ser nulo.");
 		}
 		
+		// método matches recibe como parámetro el String a validar
 		if (!mPatron.matches()) 
 		{
 			throw new IllegalArgumentException("ERROR: El dni del cliente no tiene un formato válido.");
 		}
+		//se invoca al método para comprobar que la letra de dni sea correcta
 		else if (!comprobarLetraDni(dni))
 		{
 			throw new IllegalArgumentException("ERROR: La letra del dni del cliente no es correcta.");
@@ -192,7 +209,7 @@ public class Cliente
 		this.fechaNacimiento = fechaNacimiento;
 	}
 	
-	public void setNombre (String nombre) 
+	public void setNombre(String nombre) 
 	{
 		
 		if (nombre == null)
@@ -205,7 +222,8 @@ public class Cliente
 		}
 		else 
 		{
-		this.nombre = nombre;
+			//se establece nombre con el método formateaNombre
+			this.nombre = formateaNombre(nombre);
 		}
 	}
 	
@@ -231,6 +249,7 @@ public class Cliente
 		}
 	}
 
+	//método toString para extraer la información 
 	@Override
 	public String toString() {
 		return "Cliente " + "(" + getIniciales() +") [ + nombre=" + nombre + ", dni=" + dni + ", correo=" + correo + ", telefono=" + telefono
