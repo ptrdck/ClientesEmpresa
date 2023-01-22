@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.iesalandalus.programacion.clientesempresa.modelo.dominio.Cliente;
 import org.junit.jupiter.api.Test;
 
 public class ClienteTest {

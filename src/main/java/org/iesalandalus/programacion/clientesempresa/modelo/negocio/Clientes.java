@@ -127,7 +127,7 @@ public class Clientes {
 	//devuelve array de clientes
 	public Cliente[] get() 
 	{
-		return coleccionClientes;
+		return copiaProfundaClientes();
 	}
 	
 	public int getCapacidad()

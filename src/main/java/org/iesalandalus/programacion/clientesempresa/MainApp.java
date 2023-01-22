@@ -21,8 +21,9 @@ import org.iesalandalus.programacion.clientesempresa.vista.Opcion;
 
 public class MainApp {
 	
-	private static final int NUM_MAX_CLIENTES = 5;
-	static Clientes clientes = new Clientes(NUM_MAX_CLIENTES);
+	//Declaramos un número bajo para optimizar el tiempo de pruebas del código
+	private static final int NUM_MAX_CLIENTES = 3;
+	public static Clientes clientes = new Clientes(NUM_MAX_CLIENTES);
 	
 
 	public static void main(String[] args) {
@@ -75,15 +76,19 @@ public class MainApp {
 		
 		try
 		{
-			Cliente cliente = Consola.leerCliente();
+			Cliente cliente = new Cliente(Consola.leerCliente());
 			
 			clientes.insertar(cliente);
 			
 			System.out.println("El cliente " + cliente + " ha sido insertado con éxito en el sitema. ");
 
-			System.out.println("Disponibles " + (clientes.getCapacidad() - clientes.getTamano() + "clientes para insertar en el sistema "));
+			System.out.println("Disponibles " + (clientes.getCapacidad() - clientes.getTamano() + " clientes para insertar en el sistema "));
 			
 		}
+		/*
+		 * Captura de posibles excepciones al insertar una cliente.
+		 * Clases: Cliente, CLientes y método insertar
+		 */
 		catch (OperationNotSupportedException | NullPointerException | IllegalArgumentException e)
 		{
 			System.out.println(e.getMessage());
@@ -95,8 +100,8 @@ public class MainApp {
 	{
 		try 
 		{
-			Cliente cliente = new Cliente("Pedro Patricio Cárdenas Figueroa", "45933426B", "ppcf_11@outlook.com", "644495603", "11/02/1995");
-			Clientes clientes = new Clientes(cliente);
+		
+			Cliente cliente = new Cliente(Consola.leerClienteDni());
 			if ((clientes.buscar(cliente)) == null)
 			{
 				System.out.println("El cliente " + cliente + " no está registrado en el sistema");
@@ -105,8 +110,13 @@ public class MainApp {
 			{
 				System.out.println(cliente);
 			}
+			
+			/*
+			 * Basta con calcular un posible nulo al introducir la fecha para verificar el incumplimiento
+			 * del formato y se captura desde COnsola.
+			 */
 		}
-		catch (NullPointerException e)
+		catch (Exception e)
 		{
 			System.out.println(e.getMessage());
 		}
@@ -116,14 +126,13 @@ public class MainApp {
 	{
 		try
 		{
-			Cliente cliente = new Cliente("Pedro Patricio Cárdenas Figueroa", "45933426B", "ppcf_11@outlook.com", "644495603", "11/02/1995");
-			Clientes clientes = new Clientes(cliente);
-			
-			clientes.buscar(cliente);
+			Cliente cliente = new Cliente(Consola.leerClienteDni());
+			clientes.borrar(cliente);
 			
 			System.out.println("El cliente " + cliente + " ha sido borrado del sistema");
 			System.out.println("Disponibles " + (clientes.getCapacidad() - clientes.getTamano()) + " clientes para insertar en el sistema");
 		}
+		//Caotura de posibles excepciones
 		catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException e)
 		{
 			System.out.println(e.getMessage());
@@ -151,12 +160,12 @@ public class MainApp {
 			
 			boolean clienteRegistrado = false;
 			
-			for (int i = 0; i <= clientes.get(fechaNacimiento).length -1; i++ )
+			for (int i = 0; i <= clientes.coleccionClientes.length; i++ )
 			{
-				if (clientes.get(fechaNacimiento)[i] != null)
+				if (clientes.get()[i].getFechaNacimiento().equals(fechaNacimiento))
 				{
 					clienteRegistrado = true;
-					System.out.println(clientes.get(fechaNacimiento)[i]);
+					System.out.println(clientes.get()[i].toString());
 				}
 			}
 			

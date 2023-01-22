@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.clientesempresa.modelo.dominio;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -12,7 +13,7 @@ public class Cliente
 	private static final String ER_CORREO = "\\w+(?:\\.\\w+)*@\\w+\\.\\w{2,5}";
 	private static final String ER_DNI = "([0-9]{8})([A-Za-z])";
 	private static final String ER_TELEFONO = "[679][0-9]{8}";
-	public static final String FORMATO_FECHA = "dd/MM/yyyy";
+	public static final String FORMATO_FECHA = ("dd/MM/yyyy");
 	
 	
 	private String nombre;
@@ -51,22 +52,24 @@ public class Cliente
 		//inicialización de variables locales
 		
 		//letras validas para el DNI según su posición se evalua su validez. 
-		char[] LETRAS_DNI = {'T','R','W','A','G','M','Y','F',
-							'P','D','X','B','N','J','Z','S',
-							'Q','V','H','L','C','K','E'};
+		String[] letraCorrecta = {"T","R","W","A","G","M","Y","F",
+				"P","D","X","B","N","J","Z","S",
+				"Q","V","H","L","C","K","E"};
 		
-		int dniNumero;
-		char dniLetra;
+		boolean comprueba = false;
 		
-		dniNumero = Integer.parseInt(dni.substring(0, 7));
-		dniLetra = dni.charAt(8);
+		Pattern patron = Pattern.compile(ER_DNI);
+		Matcher compara = patron.matcher(dni);
 		
-		if (dniLetra == LETRAS_DNI[dniNumero % 23])
+		if (compara.matches())
 		{
-			return true;
-		}else {
-			return false;
+			if (compara.group(2).toUpperCase().equals(letraCorrecta[Integer.parseInt(compara.group(1)) % 23]))
+			{
+				comprueba = true;
+			}
 		}
+			
+		return comprueba;
 		
 	}
 
@@ -98,10 +101,11 @@ public class Cliente
 		{
 			
 			String palabraSingular = st.nextToken();
-			formateaNombre += palabraSingular.substring(0, 1).toUpperCase()+palabraSingular.substring(1).toLowerCase();
+			formateaNombre += palabraSingular.substring(0, 1).toUpperCase()+palabraSingular.substring(1).toLowerCase() + " ";
 									
 		}
 		
+		nombre = formateaNombre.trim();
 		return formateaNombre;
 		
 	}
@@ -120,7 +124,7 @@ public class Cliente
 		return fechaNacimiento;
 	}
 	private String getIniciales() {
-		
+	
 		String iniciales = "";
 		
 		//inicialización de objeto del método StringTokenizer
@@ -128,12 +132,13 @@ public class Cliente
 		
 		//Ciclo que evaluará las palabras de nbombre y extraerá la inicial de cada una.
 		while (stIniciales.hasMoreTokens()) {
-			String inicial = stIniciales.nextToken();
+			String iNombre = stIniciales.nextToken();
 			//se extrae la inicial de cada palabra evaluada.
-			iniciales += inicial.substring(0,1); 
+			iniciales += iNombre.substring(0,1); 
 		}
 		
 		return iniciales;
+
 	}
 	
 	public String getNombre() {
@@ -175,37 +180,32 @@ public class Cliente
 
 	private void setDni(String dni) 
 	{
-		// Pattern crea el patrón que se debe cumplir.
-		Pattern patron = Pattern.compile(ER_DNI);
-		
-		// Matcher evalúa si el String cumple con el formato indicado en Pattern
-		Matcher mPatron = patron.matcher(dni);
-		
+	
 		if (dni == null)
 		{
 			throw new NullPointerException("ERROR: El dni de un cliente no puede ser nulo.");
 		}
 		
 		// método matches recibe como parámetro el String a validar
-		if (!mPatron.matches()) 
+		if (!dni.matches(ER_DNI)) 
 		{
 			throw new IllegalArgumentException("ERROR: El dni del cliente no tiene un formato válido.");
 		}
 		//se invoca al método para comprobar que la letra de dni sea correcta
-		else if (!comprobarLetraDni(dni))
+		if (!comprobarLetraDni(dni))
 		{
 			throw new IllegalArgumentException("ERROR: La letra del dni del cliente no es correcta.");
 		}
 		
-		else 
-		{
-		this.dni = dni;
-		}
+		this.dni = dni.toUpperCase();
 	}
 
 	public void setFechaNacimiento(LocalDate fechaNacimiento) 
 	{
-		
+		if (fechaNacimiento == null)
+		{
+			throw new NullPointerException("ERROR: La fecha de nacimiento de un cliente no puede ser nula.");
+		}
 		this.fechaNacimiento = fechaNacimiento;
 	}
 	
@@ -252,8 +252,8 @@ public class Cliente
 	//método toString para extraer la información 
 	@Override
 	public String toString() {
-		return "Cliente " + "(" + getIniciales() +") [ + nombre=" + nombre + ", dni=" + dni + ", correo=" + correo + ", telefono=" + telefono
-				+ ", fechaNacimiento=" + fechaNacimiento + "]";
+		return "Cliente " + "(" + getIniciales() +")  nombre =" + getNombre() + ", dni = " + getDni() + ", correo = " + getCorreo() + ", telefono = " + getTelefono()
+				+ ", fecha de nacimiento = " + getFechaNacimiento().format(DateTimeFormatter.ofPattern(FORMATO_FECHA));
 	}
 	
 	
